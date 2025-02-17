@@ -183,15 +183,22 @@
         .button {
             padding: 8px 16px; 
             border: none;
+            align-items: center;
             border-radius: 5px;
             cursor: pointer;
-            background-color: #333;
+            background-color: #0c0000;
             color: white;
             font-size: 14px; 
             text-decoration: none; 
         }
         .button:hover {
             background-color: #555;
+        }
+        .icon {
+            width: 16px; 
+            height: 16px;
+            margin-right: 8px;
+            vertical-align: middle;
         }
         pre {
             background-color: #e8e8e8;
@@ -214,12 +221,13 @@
 
     <div class="author-info">
         <span class="name">Huadai Liu</span><sup>1 2</sup>, <span class="name">Tianyi Luo</span><sup>1</sup>, <span class="name">Qikai Jiang</span><sup>1</sup>, <span class="name">Kaicheng Luo</span><sup>1</sup>, <span class="name">Peiwen Sun</span><sup>3</sup>, <span class="name">Jialei Wang</span><sup>1</sup>, <span class="name">Rongjie Huang</span><sup>4</sup>, <span class="name">Qian Chen</span><sup>2</sup>, <span class="name">Wen Wang</span><sup>2</sup>, <span class="name">Xiangtai Li</span><sup>5</sup>, <span class="name">Shiliang Zhang</span><sup>2</sup>, <span class="name">Zhijie Yan</span><sup>2</sup>, <span class="name">Zhou Zhao</span><sup>1</sup>, <span class="name">Wei Xue</span><sup>3</sup><br>
-        <sup>1</sup>Hong Kong University of Science and Technology, <sup>2</sup>Beijing University of Posts and Telecommunications, <sup>3</sup>Nanyang Technological University, <sup>4</sup>Zhejiang University
+        <sup>1</sup><span class="affiliation">Zhejiang University</span>, <sup>2</sup><span class="affiliation">Tongyi Lab, Alibaba Group</span>, <sup>3</sup><span class="affiliation">Hong Kong University of Science and Technology</span>, <sup>4</sup><span class="affiliation">Fundamental AI Research (FAIR), Meta</span>, <sup>5</sup><span class="affiliation">Nanyang Technological University</span>.<br>
     </div>
     <div class="buttons">
-        <a href="https://example.com/paper" class="button">Paper</a>
-        <a href="https://arxiv.org/" class="button">arXiv</a>
-        <a href="https://github.com/liuhuadai/OmniAudio" class="button">Code</a>
+        <a href="https://example.com/paper" class="button"><img src="image/pdf_img.jpg" class="icon">Paper</a>
+        <a href="https://arxiv.org/" class="button"><img src="image/arxiv_img.png" class="icon">arXiv</a>
+        <a href="https://github.com/liuhuadai/OmniAudio" class="button"><img src="image/github_img.png" class="icon">Code</a>
+        <a href="https://github.com/liuhuadai/Sphere360" class="button"><img src="image/github_img.png" class="icon">Dataset</a>
     </div>
 
     <!-- Abstract section -->
@@ -812,12 +820,7 @@
         <hr class="chapter-line">
         <pre>
             <code>
-                @article{sun2024both,
-                        title={Both Ears Wide Open: Towards Language-Driven Spatial Audio Generation},
-                        author={Sun, Peiwen and Cheng, Sitong and Li, Xiangtai and Ye, Zhen and Liu, Huadai and Zhang, Honggang},
-                        journal={arXiv preprint arXiv:2410.10676},
-                        year={2024}
-                    }
+               
             </code>
         </pre>
 
