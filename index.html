@@ -164,12 +164,63 @@
             flex: 0 0 23%;  
             margin-bottom: 8px;  
         }
-
+        .author-info {
+            flex-grow: 1;
+            color: #000; 
+        }
+        .author-info .name {
+            color: #007BFF; 
+        }
+        .author-info sup {
+            font-size: 12px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center; 
+            gap: 20px; 
+            padding: 10px;
+        }
+        .button {
+            padding: 8px 16px; 
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #333;
+            color: white;
+            font-size: 14px; 
+            text-decoration: none; 
+        }
+        .button:hover {
+            background-color: #555;
+        }
+        pre {
+            background-color: #e8e8e8;
+            border: 2px solid #e8e8e8; 
+            padding: 5px; 
+            overflow-x: auto;  
+            font-family: monospace; 
+            border-radius: 5px; 
+            margin: 0; 
+            text-align: left;
+        }
+        code {
+            color: #333;
+        }
         
     </style>
 </head>
 <body>
     <h1>OmniAudio: Generating Spatial Audio from 360-Degree Video</h1>
+
+    <div class="author-info">
+        <span class="name">Huadai Liu</span><sup>1 2</sup>, <span class="name">Tianyi Luo</span><sup>1</sup>, <span class="name">Qikai Jiang</span><sup>1</sup>, <span class="name">Kaicheng Luo</span><sup>1</sup>, <span class="name">Peiwen Sun</span><sup>3</sup>, <span class="name">Jialei Wang</span><sup>1</sup>, <span class="name">Rongjie Huang</span><sup>4</sup>, <span class="name">Qian Chen</span><sup>2</sup>, <span class="name">Wen Wang</span><sup>2</sup>, <span class="name">Xiangtai Li</span><sup>5</sup>, <span class="name">Shiliang Zhang</span><sup>2</sup>, <span class="name">Zhijie Yan</span><sup>2</sup>, <span class="name">Zhou Zhao</span><sup>1</sup>, <span class="name">Wei Xue</span><sup>3</sup><br>
+        <sup>1</sup>Hong Kong University of Science and Technology, <sup>2</sup>Beijing University of Posts and Telecommunications, <sup>3</sup>Nanyang Technological University, <sup>4</sup>Zhejiang University
+    </div>
+    <div class="buttons">
+        <a href="https://example.com/paper" class="button">Paper</a>
+        <a href="https://arxiv.org/" class="button">arXiv</a>
+        <a href="https://github.com/liuhuadai/OmniAudio" class="button">Code</a>
+    </div>
 
     <!-- Abstract section -->
     <div class="abstract" style="text-align: center;"></div>
@@ -749,16 +800,26 @@
         </figure>
 
     </div>
-    <h2 class="chapter-title"> Code and Dataset </h2>
+    <h2 class="chapter-title"> Code </h2>
         <hr class="chapter-line">
-        <p style="text-align: left; font-size: 16px; max-width: 96%; color: #333;">The code and dataset will be released soon.</p>
-    <h2 class="chapter-title"> BibTeX </h2>
-    <hr class="chapter-line">
-   
+        <p style="text-align: left; font-size: 16px; max-width: 96%; color: #333;">The Code and Dataset will be released soon.</p>
+    
     <h2 class="chapter-title"> Acknowledgments </h2>
         <hr class="chapter-line">
         <p style="text-align: left; font-size: 16px; max-width: 96%; color: #333;">We would like to thank <a href="https://github.com/GoogleChrome/omnitone" target="_blank">Omnitone</a> for the 360° Interactive Video Demo Player.</p>
-    
+   
+    <h2 class="chapter-title"> BibTeX </h2>
+        <hr class="chapter-line">
+        <pre>
+            <code>
+                @article{sun2024both,
+                        title={Both Ears Wide Open: Towards Language-Driven Spatial Audio Generation},
+                        author={Sun, Peiwen and Cheng, Sitong and Li, Xiangtai and Ye, Zhen and Liu, Huadai and Zhang, Honggang},
+                        journal={arXiv preprint arXiv:2410.10676},
+                        year={2024}
+                    }
+            </code>
+        </pre>
 
 </body>
 </html>
