@@ -220,7 +220,7 @@
     <h1>OmniAudio: Generating Spatial Audio from 360-Degree Video</h1>
 
     <div class="author-info">
-        <span class="name">Huadai Liu</span><sup>1 2</sup>, <span class="name">Tianyi Luo</span><sup>1</sup>, <span class="name">Qikai Jiang</span><sup>1</sup>, <span class="name">Kaicheng Luo</span><sup>1</sup>, <span class="name">Peiwen Sun</span><sup>3</sup>, <span class="name">Jialei Wang</span><sup>1</sup>, <span class="name">Rongjie Huang</span><sup>4</sup>, <span class="name">Qian Chen</span><sup>2</sup>, <span class="name">Wen Wang</span><sup>2</sup>, <span class="name">Xiangtai Li</span><sup>5</sup>, <span class="name">Shiliang Zhang</span><sup>2</sup>, <span class="name">Zhijie Yan</span><sup>2</sup>, <span class="name">Zhou Zhao</span><sup>1</sup>, <span class="name">Wei Xue</span><sup>3</sup><br>
+        <span class="name">Huadai Liu</span><sup>1 2</sup>, <span class="name">Tianyi Luo</span><sup>1</sup>, <span class="name">Kaicheng Luo</span><sup>1</sup> ,<span class="name">Qikai Jiang</span><sup>1</sup>, <span class="name">Peiwen Sun</span><sup>3</sup>, <span class="name">Jialei Wang</span><sup>1</sup>, <span class="name">Rongjie Huang</span><sup>4</sup>, <span class="name">Qian Chen</span><sup>2</sup>, <span class="name">Wen Wang</span><sup>2</sup>, <span class="name">Xiangtai Li</span><sup>5</sup>, <span class="name">Shiliang Zhang</span><sup>2</sup>, <span class="name">Zhijie Yan</span><sup>2</sup>, <span class="name">Zhou Zhao</span><sup>1</sup>, <span class="name">Wei Xue</span><sup>3</sup><br>
         <sup>1</sup><span class="affiliation">Zhejiang University</span>, <sup>2</sup><span class="affiliation">Tongyi Lab, Alibaba Group</span>, <sup>3</sup><span class="affiliation">Hong Kong University of Science and Technology</span>, <sup>4</sup><span class="affiliation">Fundamental AI Research (FAIR), Meta</span>, <sup>5</sup><span class="affiliation">Nanyang Technological University</span>.<br>
     </div>
     <div class="buttons">
@@ -631,6 +631,333 @@
     
     
 
+<div class="video-carousel-section" style="text-align: center;">
+    <h2 class="chapter-title">Scene Transition Cases</h2>
+    <hr class="chapter-line">
+    <strong style="font-size: 19px; display: block; margin-bottom: 20px;">
+        We used single-scene videos, paired them into groups, and spliced 5-second segments into 10-second clips with abrupt transitions to evaluate whether the model can better handle sudden changes in the scene.
+    </strong>
+    <div class="carousel-container" style="display: flex; justify-content: center; align-items: center; position: relative;">
+        <button id="prevBtnTrans" onclick="moveCarouselTrans(-1)" style="position: absolute; left: 10px;">&#8249;</button>
+        <div id="carouselTrans" style="display: flex; justify-content: center; overflow: hidden; max-width: 900px;">
+            <!-- Video slots to be dynamically populated -->
+        </div>
+        <button id="nextBtnTrans" onclick="moveCarouselTrans(1)" style="position: absolute; right: 10px;">&#8250;</button>
+    </div>
+    <div id="video-id-trans" class="caption" style="margin-top: 10px; font-weight: bold;"></div>
+</div>
+
+<script>
+    // Array of WebM video paths for the transition carousel
+    const videoPathsTrans = [
+        'videos_trans/p5Ady9RJyhU_110+M8AHmUYaYbI_140.webm',
+        'videos_trans/6DHUZ1Jt4wo_320+VvXNTF68hdE_230.webm',
+        'videos_trans/Fq8kqMmSl-c_160+oOLW1t9vpVQ_490.webm',
+        'videos_trans/u-Hpf2_wzB8_240+93eAayq6GO0_390.webm'
+    ];
+
+    let currentIndexTrans = 0;
+
+    // Create a video player container with demo-player.html iframe for transition videos
+    function createVideoPlayerTrans(videoPath, isMain) {
+        const playerContainer = document.createElement('div');
+        playerContainer.className = 'video-player-container';
+        playerContainer.style.position = 'relative';
+        
+        // Add styles for the container
+        playerContainer.style.border = '2px solid gray';
+        playerContainer.style.padding = '10px';
+        playerContainer.style.borderRadius = '10px';
+        playerContainer.style.backgroundColor = '#f9f9f9';
+
+        // Initially, use a canvas to show the first frame of the video
+        const thumbnailCanvas = document.createElement('canvas');
+        const thumbnailContext = thumbnailCanvas.getContext('2d');
+        thumbnailCanvas.width = 320;
+        thumbnailCanvas.height = 180;
+
+        const videoElement = document.createElement('video');
+        videoElement.src = videoPath;
+        videoElement.preload = 'metadata';
+
+        videoElement.onloadedmetadata = function() {
+            videoElement.currentTime = 0;
+            videoElement.onseeked = function() {
+                thumbnailContext.drawImage(videoElement, 0, 0, thumbnailCanvas.width, thumbnailCanvas.height);
+            };
+        };
+
+        if (isMain) {
+            const iframe = document.createElement('iframe');
+            iframe.src = `demo-player.html?videoPath=${encodeURIComponent(videoPath)}`;
+            iframe.width = '100%';
+            iframe.height = '100%';
+            iframe.style.border = 'none';
+            playerContainer.appendChild(iframe);
+        } else {
+            playerContainer.style.display = 'flex';
+            playerContainer.style.alignItems = 'center';
+            playerContainer.style.justifyContent = 'center';
+            playerContainer.style.overflow = 'hidden';
+            playerContainer.appendChild(thumbnailCanvas);
+        }
+
+        if (isMain) {
+            const fullscreenBtn = document.createElement('button');
+            fullscreenBtn.innerHTML = '⛶';
+            fullscreenBtn.style.position = 'absolute';
+            fullscreenBtn.style.top = '10px';
+            fullscreenBtn.style.right = '10px';
+            fullscreenBtn.style.padding = '10px';
+            fullscreenBtn.style.fontSize = '20px';
+            fullscreenBtn.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            fullscreenBtn.style.color = 'white';
+            fullscreenBtn.style.border = 'none';
+            fullscreenBtn.style.borderRadius = '50%';
+            fullscreenBtn.style.cursor = 'pointer';
+
+            fullscreenBtn.addEventListener('click', function() {
+                if (!document.fullscreenElement) {
+                    playerContainer.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+
+            playerContainer.appendChild(fullscreenBtn);
+        }
+
+        return playerContainer;
+    }
+
+    function moveCarouselTrans(direction) {
+        currentIndexTrans = (currentIndexTrans + direction + videoPathsTrans.length) % videoPathsTrans.length;
+
+        const videoWrapper = document.createElement('div');
+        videoWrapper.style.display = 'flex';
+        videoWrapper.style.justifyContent = 'center';
+        videoWrapper.style.position = 'relative';
+
+        const prevVideoIndex = (currentIndexTrans - 1 + videoPathsTrans.length) % videoPathsTrans.length;
+        const nextVideoIndex = (currentIndexTrans + 1) % videoPathsTrans.length;
+
+        const prevVideoPlayer = createVideoPlayerTrans(videoPathsTrans[prevVideoIndex], false);
+        const currentVideoPlayer = createVideoPlayerTrans(videoPathsTrans[currentIndexTrans], true);
+        const nextVideoPlayer = createVideoPlayerTrans(videoPathsTrans[nextVideoIndex], false);
+
+        prevVideoPlayer.style.width = '35%';
+        nextVideoPlayer.style.width = '35%';
+        currentVideoPlayer.style.width = '100%';
+        prevVideoPlayer.style.marginRight = '10px';
+        nextVideoPlayer.style.marginLeft = '10px';
+
+        videoWrapper.appendChild(prevVideoPlayer);
+        videoWrapper.appendChild(currentVideoPlayer);
+        videoWrapper.appendChild(nextVideoPlayer);
+
+        const carouselTrans = document.getElementById('carouselTrans');
+        carouselTrans.innerHTML = '';
+        carouselTrans.appendChild(videoWrapper);
+
+        const videoIdElement = document.getElementById('video-id-trans');
+        videoIdElement.innerText = '';
+    }
+
+    // Initialize the transition carousel
+    window.addEventListener('load', function() {
+        const carouselTrans = document.getElementById('carouselTrans');
+        const firstVideoPlayer = createVideoPlayerTrans(videoPathsTrans[currentIndexTrans], true);
+        const secondVideoPlayer = createVideoPlayerTrans(videoPathsTrans[(currentIndexTrans + 1) % videoPathsTrans.length], false);
+        const thirdVideoPlayer = createVideoPlayerTrans(videoPathsTrans[(currentIndexTrans + 2) % videoPathsTrans.length], false);
+        
+        carouselTrans.appendChild(firstVideoPlayer);
+        carouselTrans.appendChild(secondVideoPlayer);
+        carouselTrans.appendChild(thirdVideoPlayer);
+
+        moveCarouselTrans(0);
+    });
+</script>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ablation Study</title>
+  <style>
+    .fold-btn2 {
+      margin: 10px;
+      padding: 12px 24px;
+      background: linear-gradient(145deg, #6e7dff, #39c619);
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .fold-btn2:hover {
+      background: linear-gradient(145deg, #5560ea, #6e7dff);
+      box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .fold-btn2:active {
+      background: linear-gradient(145deg, #5560ea, #6e7dff);
+      box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+      transform: translateY(0);
+    }
+    .video-row2 {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center; 
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .video-column2 {
+        width: 10%;
+        flex: 0 0 10px; 
+        box-sizing: border-box;
+        min-width: 200px;
+    }
+
+
+  </style>
+</head>
+
+<body>
+  <div class="intro" style="text-align: center;"></div>
+  <h2 class="chapter-title">Ablation Study</h2>
+  <hr class="chapter-line">
+  <p style="text-align: left;">
+    This section presents the comparison of generation results for the models listed in Tables 3 and 4 of the paper.
+  </p>
+
+  <div id="alt2-video-selector"></div>
+
+  <script>
+    const alt2_experiments = [
+      {
+        title: "Effect of Self-supervised Pre-training",
+        path: "videos_append",
+        folders: ["Eeg_WJTTRX0_230", "TKPZf_P5_18_10", "Z7Lh6Vr-OIw_163"]
+      },
+      {
+        title: "Effect of the Dual-branch Design",
+        path: "videos_append",
+        folders: ["6DHUZ1Jt4wo_1050", "4cI-i2Hq8tU_214","ZBXiIs_4H6M_41"]
+      }
+    ];
+
+    async function alt2_loadVideoList(folderPath) {
+      const simulatedData = {
+        "videos_append/Eeg_WJTTRX0_230": ["coarse-to-fine.mp4", "w_coarse.mp4", "w_fine.mp4", "w_pt.mp4"],
+        "videos_append/TKPZf_P5_18_10": ["coarse-to-fine.mp4", "w_coarse.mp4", "w_fine.mp4", "w_pt.mp4"],
+        "videos_append/Z7Lh6Vr-OIw_163": ["coarse-to-fine.mp4", "w_coarse.mp4", "w_fine.mp4", "w_pt.mp4"],
+        "videos_append/6DHUZ1Jt4wo_1050": ["ERC+FOV.mp4", "EAC+FOV.mp4", "w_EAC.mp4", "w_ERP.mp4", "w_FOV.mp4"],
+        "videos_append/4cI-i2Hq8tU_214": ["ERC+FOV.mp4", "EAC+FOV.mp4", "w_EAC.mp4", "w_ERP.mp4", "w_FOV.mp4"],
+        "videos_append/ZBXiIs_4H6M_41": ["ERC+FOV.mp4", "EAC+FOV.mp4", "w_EAC.mp4", "w_ERP.mp4", "w_FOV.mp4"]
+      };
+      return simulatedData[folderPath] || [];
+    }
+
+    function alt2_createVideoPlayer(videoPath) {
+      const container = document.createElement('div');
+      container.className = 'video-player-container';
+
+      const iframe = document.createElement('iframe');
+      iframe.src = `demo-player.html?videoPath=${encodeURIComponent(videoPath)}`;
+
+      const fullscreenButton = document.createElement('button');
+      fullscreenButton.className = 'fullscreen-btn';
+      fullscreenButton.innerText = '⛶';
+      fullscreenButton.onclick = () => alt2_toggleFullscreen(container);
+
+      container.appendChild(iframe);
+      container.appendChild(fullscreenButton);
+      return container;
+    }
+
+    function alt2_toggleFullscreen(container) {
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(e => console.error("Fullscreen failed:", e));
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    function alt2_generateUI() {
+      const container = document.getElementById('alt2-video-selector');
+      container.innerHTML = "";
+
+      alt2_experiments.forEach((exp, expIndex) => {
+        const button = document.createElement('button');
+        button.className = 'fold-btn2';
+        button.innerText = exp.title;
+
+        const sectionDiv = document.createElement('div');
+        sectionDiv.style.display = 'none';
+        sectionDiv.id = `alt2-section-${expIndex}`;
+
+        container.appendChild(button);
+        container.appendChild(sectionDiv);
+
+        button.onclick = async () => {
+          const isHidden = sectionDiv.style.display === 'none';
+          sectionDiv.style.display = isHidden ? 'block' : 'none';
+
+          if (isHidden && sectionDiv.childElementCount === 0) {
+            for (const folder of exp.folders) {
+              const folderPath = `${exp.path}/${folder}`;
+              const files = await alt2_loadVideoList(folderPath);
+
+              const sectionItem = document.createElement('div');
+              sectionItem.className = 'section';
+
+              const title = document.createElement('div');
+              title.className = 'section-title';
+              title.innerText = `Video ID: ${folder}`;
+              sectionItem.appendChild(title);
+
+              const row = document.createElement('div');
+              row.className = 'video-row2';
+
+              files.forEach(filename => {
+                const col = document.createElement('div');
+                col.className = 'video-column2';
+
+                const player = alt2_createVideoPlayer(`${folderPath}/${filename}`);
+
+                const label = document.createElement('div');
+                label.className = 'video-title';
+                label.innerText = filename.replace(".mp4", "").replace("_", "/");
+
+                col.appendChild(player);
+                col.appendChild(label);
+                row.appendChild(col);
+              });
+
+              sectionItem.appendChild(row);
+              sectionDiv.appendChild(sectionItem);
+            }
+          }
+        };
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', alt2_generateUI);
+  </script>
+</body>
+</html>
+
+
+
+
+
 
     </div>
         <h2 class="chapter-title"> Quantitative and Qualitative Results</h2>
@@ -786,8 +1113,118 @@
             </tbody>
             <caption>Table 1. Performance comparison between AudioSpace and the baselines on the Sphere360-Bench test set and YT360 test set. We use objective metrics computing <strong>FD</strong>, <strong>KL divergence</strong>, Δ<sub>abs</sub>θ, Δ<sub>abs</sub>φ, and Δ<sub>Angular</sub> between estimated DoA and ground truth, as well as subjective metrics including MOS for spatial audio quality (<strong>MOS-SQ</strong>) and video-audio alignment faithfulness (<strong>MOS-AF</strong>). We report the mean and standard deviation for MOS-SQ and MOS-AF. <strong>+AS</strong> denotes adding an audio spatialization component. For metrics with a downward arrow (↓), lower values represent better performance, while for metrics with an upward arrow (↑), higher values indicate better quality.</caption>
         </table>
-
         
+
+       
+            <table id="table2">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>FD↓</th>
+                        <th>KL↓</th>
+                        <th>Δ<sub>abs</sub>θ↓</th>
+                        <th>Δ<sub>abs</sub>φ↓</th>
+                        <th>Δ<sub>Angular</sub>↓</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>coarse-to-fine</td>
+                        <td><strong>88.30</strong></td>
+                        <td><strong>1.58</strong></td>
+                        <td><strong>1.36</strong></td>
+                        <td><strong>0.52</strong></td>
+                        <td><strong>1.28</strong></td>
+                    </tr>
+                    <tr>
+                        <td>w/ fine</td>
+                        <td>97.57</td>
+                        <td>1.82</td>
+                        <td>1.36</td>
+                        <td>0.57</td>
+                        <td>1.28</td>
+                    </tr>
+                    <tr>
+                        <td>w/ coarse</td>
+                        <td>97.26</td>
+                        <td>1.78</td>
+                        <td>1.36</td>
+                        <td>0.66</td>
+                        <td>1.30</td>
+                    </tr>
+                    <tr>
+                        <td>w/o PT</td>
+                        <td>104.57</td>
+                        <td>1.83</td>
+                        <td>1.39</td>
+                        <td>0.58</td>
+                        <td>1.32</td>
+                    </tr>
+                </tbody>
+            
+            <caption>Table 2. Effect of Self-supervised Pre-training on various metrics: FD, KL, Δ<sub>abs</sub>θ, Δ<sub>abs</sub>φ, and Δ<sub>Angular</sub>. The arrows indicate that lower values are preferred for these metrics.</caption>
+            </table>
+ 
+
+    
+
+            <table id="table3">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>FD↓</th>
+                        <th>KL↓</th>
+                        <th>Δ<sub>abs</sub>θ↓</th>
+                        <th>Δ<sub>abs</sub>φ↓</th>
+                        <th>Δ<sub>Angular</sub>↓</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ERP+FOV</td>
+                        <td><strong>88.30</strong></td>
+                        <td><strong>1.58</strong></td>
+                        <td>1.36</td>
+                        <td><strong>0.52</strong></td>
+                        <td><strong>1.28</strong></td>
+                    </tr>
+                    <tr>
+                        <td>EAC+FOV</td>
+                        <td>89.89</td>
+                        <td>1.66</td>
+                        <td><strong>1.33</strong></td>
+                        <td>0.55</td>
+                        <td>1.29</td>
+                    </tr>
+                    <tr>
+                        <td>w/ FOV only</td>
+                        <td>88.80</td>
+                        <td>1.87</td>
+                        <td>1.41</td>
+                        <td>0.59</td>
+                        <td>1.33</td>
+                    </tr>
+                    <tr>
+                        <td>w/ EAC only</td>
+                        <td>93.37</td>
+                        <td>1.84</td>
+                        <td>1.37</td>
+                        <td>0.57</td>
+                        <td>1.30</td>
+                    </tr>
+                    <tr>
+                        <td>w/ ERP only</td>
+                        <td>97.83</td>
+                        <td>1.87</td>
+                        <td>1.35</td>
+                        <td>0.59</td>
+                        <td>1.28</td>
+                    </tr>
+                </tbody>
+            
+            <caption>Table 3. Effect of the Dual-branch Design on various metrics: FD, KL, Δ<sub>abs</sub>θ, Δ<sub>abs</sub>φ, and Δ<sub>Angular</sub>. The arrows indicate that lower values are preferred for these metrics.</caption>
+            </table>
+
 
         <figure id="fig4">
             <img src="image/figure3.png" alt="Image 3" style="width: 100%; max-width: 900px; margin-top: 20px;">
@@ -807,13 +1244,11 @@
         </figure>
 
     </div>
-    <h2 class="chapter-title"> Code </h2>
-        <hr class="chapter-line">
-        <p style="text-align: left; font-size: 16px; max-width: 96%; color: #333;">The Code and Dataset will be released soon.</p>
-    
+
     <h2 class="chapter-title"> Acknowledgments </h2>
         <hr class="chapter-line">
         <p style="text-align: left; font-size: 16px; max-width: 96%; color: #333;">We would like to thank <a href="https://github.com/GoogleChrome/omnitone" target="_blank">Omnitone</a> for the 360° Interactive Video Demo Player.</p>
+        
    
     <h2 class="chapter-title"> BibTeX </h2>
         <hr class="chapter-line">
